@@ -1,0 +1,6 @@
+uvicorn
+gunicorn
+pymongo
+python-dotenv
+fastapi
+flake8
