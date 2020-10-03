@@ -3,4 +3,5 @@ gunicorn
 pymongo
 python-dotenv
 fastapi
+jinja2
 flake8
