@@ -1,9 +1,7 @@
-import json
 from mongo import MongoAPI
 from typing import Optional
 from fastapi import FastAPI, Request
 from pydantic import BaseModel, EmailStr
-from fastapi.encoders import jsonable_encoder
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, JSONResponse
 

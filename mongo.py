@@ -1,5 +1,4 @@
 import os
-import json
 from pathlib import Path
 from dotenv import load_dotenv
 from pymongo import MongoClient
@@ -29,7 +28,7 @@ class MongoAPI:
     def insert(self, data):
         print('data from pymongo: {}'.format(data))
         # ndata = []
-        # ndata.append(data)
+        # ndata.append(data)§
         # print(json.dumps(ndata))
         response = self.collection.insert_many(data)
         return {
