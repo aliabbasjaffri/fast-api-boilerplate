@@ -4,4 +4,5 @@ pymongo
 python-dotenv
 fastapi
 jinja2
+pydantic[email]
 flake8
