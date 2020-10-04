@@ -1,4 +1,5 @@
 import os
+import json
 from pathlib import Path
 from dotenv import load_dotenv
 from pymongo import MongoClient
@@ -26,11 +27,15 @@ class MongoAPI:
         self.collection = cursor[collection]
 
     def insert(self, data):
-        response = self.collection.insert_one(data)
+        print('data from pymongo: {}'.format(data))
+        # ndata = []
+        # ndata.append(data)
+        # print(json.dumps(ndata))
+        response = self.collection.insert_many(data)
         return {
-            'Status': 'Item Created Successfully',
-            '_id': str(response.inserted_id)
-            }
+            'Status': 'Item/s Created Successfully',
+            'ids': response.inserted_ids
+        }
 
     def read_all_items(self):
         items = self.collection.find()
