@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 from pymongo import MongoClient
-from bson.json_util import dumps
+from bson.objectid import ObjectId
 
 env_path = Path('.') / '.env'
 load_dotenv(dotenv_path=env_path)
@@ -25,33 +25,68 @@ class MongoAPI:
         cursor = self.client[database]
         self.collection = cursor[collection]
 
-    def insert(self, data):
-        print('data from pymongo: {}'.format(data))
-        # ndata = []
-        # ndata.append(data)§
-        # print(json.dumps(ndata))
-        response = self.collection.insert_many(data)
+    async def insert(self, data: dict):
+        _response = self.collection.insert_one(data)
+        _user = self.collection.find_one({'_id': _response.inserted_id})
         return {
-            'Status': 'Item/s Created Successfully',
-            'ids': response.inserted_ids
+            'user': '{}'.format(_user),
+            'statuscode': 200
         }
 
-    def read_all_items(self):
-        items = self.collection.find()
-        output = {}
-        for item in items:
-            if "item" not in output:
-                output["item"] = dumps(item)
-            else:
-                output["item"].append(dumps(item))
-        return output
-
-    def update(self, data, id):
-        response = self.collection.update_one({'_id': id}, {'$set': data})
-        return {
-            'Status': 'Item updated successfully' if response.modified_count > 0 else 'Item update unsuccessful'
+    async def read_item(self, id: str):
+        _user = self.collection.find_one({'_id': ObjectId(id)})
+        if _user:
+            return {
+                'user': '{}'.format(_user),
+                'statuscode': 200
+            }
+        else:
+            return {
+                'message': 'User with ID: {} does not exist'.format(id),
+                'statuscode': 404
             }
 
-    def delete(self, id):
-        response = self.collection.delete_one({'_id': id})
-        return {'Status': 'Item deleted successfully' if response.deleted_count > 0 else 'Item not found.'}
+    async def read_all_items(self):
+        _users = []
+        for item in self.collection.find():
+            _users.append(item)
+        if _users:
+            return {
+                'users': '{}'.format(_users),
+                'statuscode': 200
+            }
+        else:
+            return {
+                'message': 'No User exist in the DB',
+                'statuscode': 404
+            }
+
+    async def update(self, id: str, data: dict):
+        _user = self.collection.find_one({'_id': ObjectId(id)})
+        if _user:
+            updated_user = self.collection.update_one(
+                    {'_id': ObjectId(id)}, {'$set': data})
+            if updated_user:
+                return {
+                    'user': '{}'.format(id),
+                    'statuscode': 204
+                }
+        else:
+            return {
+                'message': 'User ID does not exist.',
+                'statuscode': 404
+            }
+
+    async def delete(self, id: str):
+        _user = self.collection.find_one({'_id': ObjectId(id)})
+        if _user:
+            self.collection.delete_one({'_id': ObjectId(id)})
+            return {
+                'message': 'Item deleted successfully',
+                'statuscode': 204
+            }
+        else:
+            return {
+                'message': 'User ID does not exist.',
+                'statuscode': 404
+            }
