@@ -9,6 +9,7 @@ pidfile = '/tmp/hello-http-unix.pid'
 errorlog = '/var/log/gunicorn/gunicorn.log'
 loglevel = 'warning'
 bind = 'unix:/opt/api/app.sock'
+umask = '007'
 daemon = False
 workers = max_workers()
 threads = 2
