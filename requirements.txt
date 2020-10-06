@@ -6,3 +6,5 @@ fastapi
 jinja2
 pydantic[email]
 flake8
+uvloop
+httptools
