@@ -1,17 +1,16 @@
 from multiprocessing import cpu_count
+from pathlib import Path
 
 
-def max_workers():
-    return cpu_count()
+Path("/var/log/gunicorn/").mkdir(parents=True, exist_ok=True)
 
 
-pidfile = '/tmp/hello-http-unix.pid'
+pidfile = '/var/run/gunicorn.pid'
 errorlog = '/var/log/gunicorn/gunicorn.log'
 loglevel = 'warning'
 bind = 'unix:/opt/api/app.sock'
-umask = '007'
 daemon = False
-workers = max_workers()
+workers = cpu_count() * 2 + 1
 threads = 2
 worker_class = '/usr/local/bin/uvicorn.workers.UvicornWorker'
 user = 'www-data'
