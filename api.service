@@ -1,0 +1,14 @@
+[Unit]
+Description=Gunicorn instance to serve API
+After=network.target
+
+[Service]
+# The user and group are set as www-data because this is the user that can
+# access nginx service
+User=www-data
+Group=www-data
+WorkingDirectory=/opt/api/
+ExecStart=/usr/local/bin/gunicorn -c gunicorn.conf.py api:app
+
+[Install]
+WantedBy=multi-user.target
