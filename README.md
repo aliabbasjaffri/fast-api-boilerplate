@@ -9,7 +9,6 @@ fast-api boilerplate template for personal projects based on 12 factor app rules
 ## Setting up fastapi Application for Production Environment
 - Launch a VM and upgrade/update it via `apt update && apt upgrade -yq`
 - Install the system dependencies via `apt install -yq git python3 python3-pip nginx`
-- If you are monitoring gunicorn via supervisord, you need to install it as a system dependency using `apt install -y supervisor`
 - Checkout this repository in it and move the project file to the appropriate directory
 ```bash
 mv fast-api-boilerplate/ /opt/api
@@ -120,11 +119,9 @@ openssl s_client -connect <VM-IP>:443 -showcerts
 ## API Testing
 - If everything goes well, you can easily test the API at `<VM-IP-ADDRESS>:8000/docs` using swagger docs
 
-
-
-```bash
-# -------------------------------------
-# https://serversforhackers.com/c/monitoring-processes-with-supervisord
-apt-get install supervisor
-supervisord -c supervisord.conf
-```
+## Supervisord as an alternative to Daemon Service
+- If you are monitoring gunicorn via supervisord, you need to install it as a system dependency using `apt-get install -y supervisor`
+- This would create `/etc/supervisor/conf.d` directory. Move the `supervisord.conf` to `/etc/supervisor/conf.d` via `mv supervisord.conf /etc/supervisor/conf.d`. This allows our config file to be included in the main supervisord config.
+- Start the supervisor service via `systemctl start supervisor`
+- You can monitor the state of the application being run using the built in web interface on `<VM-IP-ADDRESS>:9001`
+- For troubleshooting, refer to the following [link](https://serversforhackers.com/c/monitoring-processes-with-supervisord)
