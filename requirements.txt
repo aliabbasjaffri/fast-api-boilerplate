@@ -8,4 +8,3 @@ pydantic[email]
 flake8
 uvloop
 httptools
-supervisor
