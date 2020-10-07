@@ -1,8 +1,10 @@
-from multiprocessing import cpu_count
+import shutil
 from pathlib import Path
+from multiprocessing import cpu_count
 
 
-Path("/var/log/gunicorn/").mkdir(parents=True, exist_ok=True)
+Path('/var/log/gunicorn/').mkdir(parents=True, exist_ok=True)
+shutil.chown('/var/log/gunicorn/', user='www-data', group='www-data')
 
 errorlog = '/var/log/gunicorn/gunicorn.log'
 loglevel = 'warning'
